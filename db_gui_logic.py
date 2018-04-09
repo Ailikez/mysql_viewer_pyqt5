@@ -197,7 +197,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
 	def tableWidget_modify(self):
 		_translate = QtCore.QCoreApplication.translate
-		for i in range(0, 39):
+		for i in range(0, 30):
 			for j in range(0, 8):
 				item = QtWidgets.QTableWidgetItem()
 				self.tableWidget.setItem(i, j, item)
