@@ -1,5 +1,6 @@
 # GUI LOGIC Parts.
-# from PyQt5 import QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets
+
 from PyQt5.QtWidgets import QMainWindow
 from db_gui import Ui_MainWindow
 # from PyQt5.QtCore import QCoreApplication
@@ -16,6 +17,8 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 	def __init__(self, parent = None):
 		super(MyMainWindow, self).__init__(parent)
 		self.setupUi(self)
+		# 用来设置tablewidget
+		self.tableWidget_modify()
 		self.sql_cmd = "select * from lagou_job"
 		self.lineEdit_connect_content = ""
 		self.conn_host = ""
@@ -42,7 +45,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 			self.mysql_cursor.execute(self.sql_cmd)
 			self.mysql_rows = self.mysql_cursor.fetchall()
 
-			for j in range(0, len(self.mysql_rows)):
+			for j in range(0, min(len(self.mysql_rows), 30)):
 				for i in range(0, 8):
 					item = self.tableWidget.item(j, i)
 					item.setText(self.mysql_rows[j][i])
@@ -52,11 +55,11 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 			self.statusbar.showMessage("请先和数据库建立连接.")
 	
 	def btn_clear_released(self):
-		for j in range(0, 10):
+		for j in range(0, 30):
 			for i in range(0, 8):
 				item = self.tableWidget.item(j, i)
 				item.setText(' ')
-		self.statusbar.showMessage("所查询内容已经清除.")
+		self.statusbar.showMessage("内容已经清除.")
 	
 	def btn_connect_released(self):
 		if self.btn_connect.isChecked():
@@ -191,3 +194,14 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 				self.statusbar.showMessage(str(err))
 		else:
 			self.statusbar.showMessage("请输入网址或者浏览器路径...")
+
+	def tableWidget_modify(self):
+		_translate = QtCore.QCoreApplication.translate
+		for i in range(0, 39):
+			for j in range(0, 8):
+				item = QtWidgets.QTableWidgetItem()
+				self.tableWidget.setItem(i, j, item)
+		for i in range(0, 30):
+			for j in range(0, 8):
+				item = self.tableWidget.item(i, j)
+				item.setText(_translate("MainWindow", "示例"))
