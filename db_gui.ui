@@ -238,12 +238,13 @@
      <widget class="QLineEdit" name="lineEdit_connect">
       <property name="font">
        <font>
+        <pointsize>10</pointsize>
         <weight>50</weight>
         <bold>false</bold>
        </font>
       </property>
       <property name="text">
-       <string>host=192.168.228.136, user=root, passwd=root, db=article_spider</string>
+       <string>host=192.168.228.136, user=root, passwd=root, db=article_spider, tab=lagou_job</string>
       </property>
      </widget>
     </item>

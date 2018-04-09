@@ -16,7 +16,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 	def __init__(self, parent = None):
 		super(MyMainWindow, self).__init__(parent)
 		self.setupUi(self)
-		self.sql_cmd = "select * from tab_job"
+		self.sql_cmd = "select * from lagou_job"
 		self.lineEdit_connect_content = ""
 		self.conn_host = ""
 		self.conn_user = ""
@@ -26,6 +26,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 		self.mysql_conn = None
 		self.mysql_cursor = None
 		self.mysql_rows = None
+		self.conn_tablename = "demo"
 		self.err = None
 	# slots functions.
 	# def btn_click_released(self):
@@ -37,13 +38,14 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 	
 	def btn_load_released(self):
 		if self.mysql_cursor:
-			self.mysql_cursor.execute("SELECT * FROM lagou_job")
+			self.sql_cmd = "SELECT title,salary,job_addr,job_type,degree_need,work_years,url,job_desc FROM " + self.conn_tablename
+			self.mysql_cursor.execute(self.sql_cmd)
 			self.mysql_rows = self.mysql_cursor.fetchall()
 
-			# for j in range(0, 10):
-			# 	for i in range(0, 8):
-			# 		item = self.tableWidget.item(j, i)
-			# 		item.setText(self.mysql_rows[j][i])
+			for j in range(0, len(self.mysql_rows)):
+				for i in range(0, 8):
+					item = self.tableWidget.item(j, i)
+					item.setText(self.mysql_rows[j][i])
 			self.statusbar.showMessage("数据装载完成.")
 		
 		else:
@@ -79,13 +81,18 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 			else:
 				self.statusbar.showMessage("输入错误,未检测到passwd字段.")
 				return
-			temp = re.match(".*db=(.*)", self.lineEdit_connect_content)
+			temp = re.match(".*db=(.*?),.*", self.lineEdit_connect_content)
 			if temp:
 				self.conn_dbname = temp.group(1)
 			else:
 				self.statusbar.showMessage("输入错误,未检测到db字段.")
 				return
-			
+			temp = re.match(".*tab=(.*)", self.lineEdit_connect_content)
+			if temp:
+				self.conn_tablename = temp.group(1)
+			else:
+				self.statusbar.showMessage("输入错误,未检测到db字段.")
+				return
 			# connect with MySQL
 			if not self.mysql_conn:
 				try:
@@ -94,6 +101,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 							user=self.conn_user,
 							password=self.conn_passwd,
 							database=self.conn_dbname,
+							charset="utf8",
 							use_unicode=True)
 					self.mysql_cursor = self.mysql_conn.cursor()
 				except Exception as err:
@@ -135,36 +143,36 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 	
 	def btn_plothisto_released(self):
 		if self.mysql_conn:
-			salary = [i[3] for i in self.mysql_rows]
+			salary = [i[1] for i in self.mysql_rows]
 			salary = [
 				max(int(re.match('^(\d.*?)[Kk].*', i).group(1)), int(re.match('.*-(\d.*?)[Kk].*', i).group(1)))
 				for i in salary
 			]
-			company = [i[12] for i in self.mysql_rows]
+			company = [i[0] for i in self.mysql_rows]
 			data = [plt_go.Bar(
 				x=company,
 				y=salary
 			)]
 			plt.offline.plot(data, filename='最高薪资水平图.html')
 			#####
-			salary = [i[3] for i in self.mysql_rows]
+			salary = [i[1] for i in self.mysql_rows]
 			salary = [
 				(int(re.match('^(\d.*?)[Kk].*', i).group(1))+int(re.match('.*-(\d.*?)[Kk].*', i).group(1)))/2
 				for i in salary
 			]
-			company = [i[12] for i in self.mysql_rows]
+			company = [i[0] for i in self.mysql_rows]
 			data = [plt_go.Bar(
 				x=company,
 				y=salary
 			)]
 			plt.offline.plot(data, filename='平均薪资水平图.html')
 			#####
-			salary = [i[3] for i in self.mysql_rows]
+			salary = [i[1] for i in self.mysql_rows]
 			salary = [
 				min(int(re.match('^(\d.*?)[Kk].*', i).group(1)), int(re.match('.*-(\d.*?)[Kk].*', i).group(1)))
 				for i in salary
 			]
-			company = [i[12] for i in self.mysql_rows]
+			company = [i[0] for i in self.mysql_rows]
 			data = [plt_go.Bar(
 				x=company,
 				y=salary
