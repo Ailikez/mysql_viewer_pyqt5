@@ -1,17 +1,1 @@
 # 这是一个简单的数据库应用程序
-# 每次重新生成db_gui.py后需要添加下面这段程序
-
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setItem(9, 7, item)
-####后面的要插入进去
-        for i in range(0, 39):
-	        for j in range(0, 8):
-		        item = QtWidgets.QTableWidgetItem()
-		        self.tableWidget.setItem(i, j, item)
-
-
-
-        for i in range(0, 30):
-            for j in range(0, 8):
-                item = self.tableWidget.item(i, j)
-                item.setText(_translate("MainWindow", "示例"))
