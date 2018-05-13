@@ -37,32 +37,8 @@
        <string extracomment="you can put SQL cmd here"/>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
-      <widget class="QWidget" name="tab_sql">
-       <attribute name="title">
-        <string>SQL</string>
-       </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <widget class="QTextEdit" name="textEdit">
-          <property name="font">
-           <font>
-            <pointsize>18</pointsize>
-            <weight>50</weight>
-            <bold>false</bold>
-           </font>
-          </property>
-          <property name="frameShape">
-           <enum>QFrame::Box</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Plain</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
       <widget class="QWidget" name="tab_plot">
        <attribute name="title">
         <string>PLOT</string>
@@ -72,13 +48,6 @@
          <widget class="QPushButton" name="btn_plothisto">
           <property name="text">
            <string>Histogram</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QPushButton" name="btn_plotcurve">
-          <property name="text">
-           <string>Curve</string>
           </property>
          </widget>
         </item>
@@ -125,6 +94,11 @@
          </widget>
         </item>
        </layout>
+       <zorder>label_7</zorder>
+       <zorder>label_8</zorder>
+       <zorder>lineEdit_browser</zorder>
+       <zorder>pushButton</zorder>
+       <zorder>lineEdit_url</zorder>
       </widget>
      </widget>
     </item>
@@ -136,14 +110,14 @@
          <string notr="true">font: 11pt &quot;Source Code Pro&quot;;</string>
         </property>
         <property name="text">
-         <string/>
+         <string>10K</string>
         </property>
        </widget>
       </item>
       <item row="5" column="0">
        <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>position</string>
+         <string>job_addr</string>
         </property>
        </widget>
       </item>
@@ -153,7 +127,7 @@
          <string notr="true">font: 11pt &quot;Source Code Pro&quot;;</string>
         </property>
         <property name="text">
-         <string/>
+         <string>全职</string>
         </property>
        </widget>
       </item>
@@ -163,7 +137,7 @@
          <string notr="true">font: 11pt &quot;Source Code Pro&quot;;</string>
         </property>
         <property name="text">
-         <string/>
+         <string>本科</string>
         </property>
        </widget>
       </item>
@@ -173,7 +147,7 @@
          <string notr="true">font: 11pt &quot;Source Code Pro&quot;;</string>
         </property>
         <property name="text">
-         <string/>
+         <string>标题</string>
         </property>
        </widget>
       </item>
@@ -183,7 +157,7 @@
          <string notr="true">font: 11pt &quot;Source Code Pro&quot;;</string>
         </property>
         <property name="text">
-         <string/>
+         <string>2年</string>
         </property>
        </widget>
       </item>
@@ -193,7 +167,7 @@
          <string notr="true">font: 11pt &quot;Source Code Pro&quot;;</string>
         </property>
         <property name="text">
-         <string/>
+         <string>上海</string>
         </property>
        </widget>
       </item>
@@ -214,21 +188,21 @@
       <item row="1" column="4">
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>workyears</string>
+         <string>work_years</string>
         </property>
        </widget>
       </item>
       <item row="3" column="4">
        <widget class="QLabel" name="label_5">
         <property name="text">
-         <string>degree</string>
+         <string>degree_need</string>
         </property>
        </widget>
       </item>
       <item row="5" column="4">
        <widget class="QLabel" name="label_6">
         <property name="text">
-         <string>type</string>
+         <string>job_type</string>
         </property>
        </widget>
       </item>
@@ -328,30 +302,6 @@
         </property>
         <property name="text">
          <string>Clear</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btn_exec">
-        <property name="font">
-         <font>
-          <pointsize>27</pointsize>
-         </font>
-        </property>
-        <property name="cursor">
-         <cursorShape>PointingHandCursor</cursorShape>
-        </property>
-        <property name="mouseTracking">
-         <bool>false</bool>
-        </property>
-        <property name="statusTip">
-         <string extracomment="execute sql cmd"/>
-        </property>
-        <property name="text">
-         <string>EXECUTE</string>
-        </property>
-        <property name="flat">
-         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -606,12 +556,12 @@
       </column>
       <column>
        <property name="text">
-        <string>job_salary</string>
+        <string>salary</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>job_position</string>
+        <string>job_addr</string>
        </property>
       </column>
       <column>
@@ -621,17 +571,17 @@
       </column>
       <column>
        <property name="text">
-        <string>job_degree</string>
+        <string>degree_need</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>job_workyears</string>
+        <string>work_years</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>job_url</string>
+        <string>url</string>
        </property>
       </column>
       <column>
@@ -1077,16 +1027,7 @@
     <property name="title">
      <string>PLOT</string>
     </property>
-    <widget class="QMenu" name="menuSalary">
-     <property name="title">
-      <string>Salary</string>
-     </property>
-     <addaction name="actioncurve"/>
-     <addaction name="actionHistogram"/>
-     <addaction name="actiondot"/>
-     <addaction name="actioncircle"/>
-    </widget>
-    <addaction name="menuSalary"/>
+    <addaction name="separator"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuPLOT"/>
@@ -1120,29 +1061,6 @@
     <bool>false</bool>
    </attribute>
   </widget>
-  <action name="actioncurve">
-   <property name="text">
-    <string>curve</string>
-   </property>
-  </action>
-  <action name="actionHistogram">
-   <property name="text">
-    <string>Histogram</string>
-   </property>
-  </action>
-  <action name="actiondot">
-   <property name="checkable">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>dot</string>
-   </property>
-  </action>
-  <action name="actioncircle">
-   <property name="text">
-    <string>circle</string>
-   </property>
-  </action>
  </widget>
  <resources/>
  <connections>
@@ -1153,8 +1071,8 @@
    <slot>btn_load_released()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>954</x>
-     <y>577</y>
+     <x>645</x>
+     <y>571</y>
     </hint>
     <hint type="destinationlabel">
      <x>845</x>
@@ -1169,8 +1087,8 @@
    <slot>btn_clear_released()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>249</x>
-     <y>577</y>
+     <x>487</x>
+     <y>571</y>
     </hint>
     <hint type="destinationlabel">
      <x>249</x>
@@ -1185,8 +1103,8 @@
    <slot>btn_search_released()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>169</x>
-     <y>577</y>
+     <x>329</x>
+     <y>571</y>
     </hint>
     <hint type="destinationlabel">
      <x>149</x>
@@ -1201,8 +1119,8 @@
    <slot>btn_up_released()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1114</x>
-     <y>577</y>
+     <x>961</x>
+     <y>571</y>
     </hint>
     <hint type="destinationlabel">
      <x>994</x>
@@ -1217,28 +1135,12 @@
    <slot>btn_next_released()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1034</x>
-     <y>577</y>
+     <x>803</x>
+     <y>571</y>
     </hint>
     <hint type="destinationlabel">
      <x>900</x>
      <y>388</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btn_exec</sender>
-   <signal>released()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>btn_execute_released()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>778</x>
-     <y>544</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>654</x>
-     <y>446</y>
     </hint>
    </hints>
   </connection>
@@ -1249,12 +1151,28 @@
    <slot>btn_connect_released()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>82</x>
-     <y>577</y>
+     <x>142</x>
+     <y>571</y>
     </hint>
     <hint type="destinationlabel">
      <x>94</x>
      <y>491</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>released()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>btn_browser_released()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>101</x>
+     <y>142</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>443</x>
+     <y>399</y>
     </hint>
    </hints>
   </connection>
@@ -1274,22 +1192,6 @@
     </hint>
    </hints>
   </connection>
-  <connection>
-   <sender>pushButton</sender>
-   <signal>released()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>btn_browser_released()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>447</x>
-     <y>291</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>443</x>
-     <y>399</y>
-    </hint>
-   </hints>
-  </connection>
  </connections>
  <slots>
   <slot>btn_load_released()</slot>
@@ -1301,5 +1203,6 @@
   <slot>btn_connect_released()</slot>
   <slot>btn_plothisto_released()</slot>
   <slot>btn_browser_released()</slot>
+  <slot>btn_dot_released()</slot>
  </slots>
 </ui>
