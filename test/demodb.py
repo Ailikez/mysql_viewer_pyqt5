@@ -4,6 +4,7 @@
 Created on Wed Apr  4 09:44:04 2018
 
 @author: ailike
+数据库链接测试
 """
 
 from mysql import connector as mysqlconn
