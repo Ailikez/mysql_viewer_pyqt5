@@ -30,6 +30,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.current_rows = None
         self.pages_of_rows = 0
         self.current_page = 1
+        self.is_mysql_connected = False
 
     def gui_quit(self):
         # QCoreApplication.instance().quit()
@@ -48,8 +49,10 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 for i in range(0, 8):
                     item = self.tableWidget.item(j, i)
                     item.setText(self.current_rows[j][i])
-            self.statusbar.showMessage(
-                f"数据装载完成,共{str(int(self.pages_of_rows))}页,{str(len(self.mysql_all_rows))}条数据.(～o￣3￣)～.")
+            self.statusbar.showMessage("数据装载完成,共{page}页,{amount}条数据.(～o￣3￣)～."\
+                .format(page=str(int(self.pages_of_rows)), amount=str(len(self.mysql_all_rows))))
+            # self.statusbar.showMessage(
+            #     f"数据装载完成,共{str(int(self.pages_of_rows))}页,{str(len(self.mysql_all_rows))}条数据.(～o￣3￣)～.")
         else:
             self.statusbar.showMessage("请先和数据库建立连接.=￣ω￣=.")
 
@@ -112,6 +115,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                     return
             # here, you should establish connection with MySQL successfully
             # construct SQL Quote
+            self.is_mysql_connected = True
             self.statusbar.showMessage("数据库连接完成...╰(￣ω￣ｏ)")
         else:
             if self.mysql_conn:
@@ -120,10 +124,14 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 self.mysql_cursor = None
                 self.mysql_conn = None
                 self.statusbar.showMessage("数据库连接关闭(。>︿<)_θ")
+                self.is_mysql_connected = False
             else:
                 self.statusbar.showMessage("错误:无法关闭数据库...")
 
     def btn_up_released(self):
+        if not self.is_mysql_connected:
+            self.statusbar.showMessage("请先和数据库建立连接.(。・∀・)ノ")
+            return
         if self.pages_of_rows == 0:
             self.statusbar.showMessage("无数据.")
             return
@@ -137,6 +145,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.current_rows = self.mysql_all_rows[((self.current_page-1)*30):]
         else:
             self.current_rows = self.mysql_all_rows[((self.current_page-1)*30):(self.current_page*30)]
+        self.btn_clear_released()
         if self.mysql_cursor:
             for j in range(0, min(len(self.current_rows), 30)):
                 for i in range(0, 8):
@@ -147,6 +156,9 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.statusbar.showMessage("数据库连接出错咯😠.")
 
     def btn_next_released(self):
+        if not self.is_mysql_connected:
+            self.statusbar.showMessage("请先和数据库建立连接.(。・∀・)ノ")
+            return
         if self.pages_of_rows == 0:
             self.statusbar.showMessage("无数据.")
             return
@@ -160,6 +172,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.current_rows = self.mysql_all_rows[((self.current_page-1)*30):]
         else:
             self.current_rows = self.mysql_all_rows[((self.current_page-1)*30):(self.current_page*30)]
+        self.btn_clear_released()
         if self.mysql_cursor:
             for j in range(0, min(len(self.current_rows), 30)):
                 for i in range(0, 8):
@@ -170,6 +183,9 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.statusbar.showMessage("数据库连接出错咯😠.")
 
     def btn_search_released(self):
+        if not self.is_mysql_connected:
+            self.statusbar.showMessage("请先和数据库建立连接.(。・∀・)ノ")
+            return
         self.btn_clear_released()
         temp_cmd = []
         temp = self.lineEdit_title.text()
@@ -212,10 +228,11 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 for i in range(0, 8):
                     item = self.tableWidget.item(j, i)
                     item.setText(self.current_rows[j][i])
-            self.statusbar.showMessage(f"数据查询完成,共{str(self.pages_of_rows)}页,{str(len(self.mysql_all_rows))}条数据.")
-
+            # self.statusbar.showMessage(f"数据查询完成,共{str(self.pages_of_rows)}页,{str(len(self.mysql_all_rows))}条数据.")
+            self.statusbar.showMessage("数据装载完成,共{page}页,{amount}条数据.(～o￣3￣)～."\
+                .format(page=str(int(self.pages_of_rows)), amount=str(len(self.mysql_all_rows))))
         else:
-            self.statusbar.showMessage("请先和数据库建立连接.")
+            self.statusbar.showMessage("请先和数据库建立连接.(。・∀・)ノ")
 
     def die(self):
         try:
@@ -225,45 +242,51 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             print(err)
 
     def btn_plothisto_released(self):
-        if self.mysql_conn:
-            salary = [i[1] for i in self.current_rows]
-            salary = [
-                max(int(re.match('^(\d.*?)[Kk].*', i).group(1)), int(re.match('.*-(\d.*?)[Kk].*', i).group(1)))
-                for i in salary
-            ]
-            company = [i[0] for i in self.current_rows]
-            data = [plt_go.Bar(
-                x=company,
-                y=salary
-            )]
-            plt.offline.plot(data, filename='最高薪资水平图.html')
+        if not self.is_mysql_connected:
+            self.statusbar.showMessage("请先和数据库建立连接.(。・∀・)ノ")
+            return
+        # if self.mysql_conn:
+        #     salary = [i[1] for i in self.current_rows]
+        #     salary = [
+        #         max(int(re.match('^(\d.*?)[Kk].*', i).group(1)), int(re.match('.*-(\d.*?)[Kk].*', i).group(1)))
+        #         for i in salary
+        #     ]
+        #     j = [i for i in range(1, len(self.current_rows)+1)]
+        #     company = [str(k)+'-'+i[0] for (k, i) in zip(j, self.current_rows)]
+        #     data = [plt_go.Bar(
+        #         x=company,
+        #         y=salary
+        #     )]
+        #     plt.offline.plot(data, filename='最高薪资水平图.html')
             #####
             salary = [i[1] for i in self.current_rows]
             salary = [
                 (int(re.match('^(\d.*?)[Kk].*', i).group(1)) + int(re.match('.*-(\d.*?)[Kk].*', i).group(1))) / 2
                 for i in salary
             ]
-            company = [i[0] for i in self.current_rows]
+            j = [i for i in range(1, len(self.current_rows)+1)]
+            company = [str(k)+'-'+i[0] for (k, i) in zip(j, self.current_rows)]
             data = [plt_go.Bar(
                 x=company,
                 y=salary
             )]
-            plt.offline.plot(data, filename='平均薪资水平图.html')
-            #####
-            salary = [i[1] for i in self.current_rows]
-            salary = [
-                min(int(re.match('^(\d.*?)[Kk].*', i).group(1)), int(re.match('.*-(\d.*?)[Kk].*', i).group(1)))
-                for i in salary
-            ]
-            company = [i[0] for i in self.current_rows]
-            data = [plt_go.Bar(
-                x=company,
-                y=salary
-            )]
-            plt.offline.plot(data, filename='最低薪资水平图.html')
-            self.statusbar.showMessage("薪资直方图绘制完成(ง •_•)ง")
-        else:
-            return
+            plt.offline.plot(data, filename='./output/average_salary.html')
+        #     #####
+        #     salary = [i[1] for i in self.current_rows]
+        #     salary = [
+        #         min(int(re.match('^(\d.*?)[Kk].*', i).group(1)), int(re.match('.*-(\d.*?)[Kk].*', i).group(1)))
+        #         for i in salary
+        #     ]
+        #     j = [i for i in range(1, len(self.current_rows)+1)]
+        #     company = [str(k)+'-'+i[0] for (k, i) in zip(j, self.current_rows)]
+        #     data = [plt_go.Bar(
+        #         x=company,
+        #         y=salary
+        #     )]
+        #     plt.offline.plot(data, filename='最低薪资水平图.html')
+        #     self.statusbar.showMessage("薪资直方图绘制完成(ง •_•)ง")
+        # else:
+        #     return
 
     def btn_browser_released(self):
         if re.match('.*http.*', self.lineEdit_url.text()):
