@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1023, 963)
+        MainWindow.resize(727, 828)
         font = QtGui.QFont()
         font.setFamily("Source Code Pro")
         font.setPointSize(12)
@@ -467,7 +467,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.tableWidget)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1023, 31))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 727, 23))
         font = QtGui.QFont()
         font.setFamily("Source Code Pro")
         font.setPointSize(10)
@@ -537,7 +537,7 @@ class Ui_MainWindow(object):
         self.label_4.setText(_translate("MainWindow", "work_years"))
         self.label_5.setText(_translate("MainWindow", "degree_need"))
         self.label_6.setText(_translate("MainWindow", "job_type"))
-        self.lineEdit_connect.setText(_translate("MainWindow", "host=192.168.228.136, user=root, passwd=root, db=article_spider, tab=lagou_job"))
+        self.lineEdit_connect.setText(_translate("MainWindow", "host=127.0.0.1, user=root, passwd=root, db=article_spider, tab=lagou_job"))
         self.btn_connect.setText(_translate("MainWindow", "Connnect"))
         self.btn_search.setText(_translate("MainWindow", "&Search"))
         self.btn_clear.setText(_translate("MainWindow", "Clear"))

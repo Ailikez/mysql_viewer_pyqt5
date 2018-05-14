@@ -17,7 +17,7 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MyMainWindow, self).__init__(parent)
         self.setupUi(self)
-        # 用来设置tablewidget
+        # 用来设置tableWidget
         self.tableWidget_modify()
         self.sql_cmd = "select * from"
         self.lineEdit_connect_content = ""
@@ -28,10 +28,12 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.conn_charset = ""
         self.mysql_conn = None
         self.mysql_cursor = None
-        self.mysql_rows = None
+        self.mysql_all_rows = None
         self.conn_tablename = "demo"
         self.err = None
-
+        self.current_rows = None
+        self.pages_of_rows = 0
+        self.current_page = 1
     # slots functions.
     # def btn_click_released(self):
     # 	QtWidgets.QMessageBox.information(self.pushButton, "Demo", "Demo gui program")
@@ -42,16 +44,18 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
 
     def btn_load_released(self):
         if self.mysql_cursor:
-            self.sql_cmd = "SELECT title,salary,job_addr,job_type,degree_need,work_years,url,job_desc FROM " + self.conn_tablename
+            self.sql_cmd = "SELECT title,salary,job_addr,job_type,degree_need,work_years,url,job_desc FROM " \
+                           + self.conn_tablename
             self.mysql_cursor.execute(self.sql_cmd)
-            self.mysql_rows = self.mysql_cursor.fetchall()
-
-            for j in range(0, min(len(self.mysql_rows), 30)):
+            self.mysql_all_rows = self.mysql_cursor.fetchall()
+            self.pages_of_rows = (int(len(self.mysql_all_rows)/30) + 1)if (len(self.mysql_all_rows) % 30) != 0 \
+                else len(self.mysql_all_rows)/30
+            self.current_rows = self.mysql_all_rows[0:30]
+            for j in range(0, min(len(self.current_rows), 30)):
                 for i in range(0, 8):
                     item = self.tableWidget.item(j, i)
-                    item.setText(self.mysql_rows[j][i])
-            self.statusbar.showMessage("数据装载完成.")
-
+                    item.setText(self.current_rows[j][i])
+            self.statusbar.showMessage(f"数据装载完成,共{str(self.pages_of_rows)}页,{str(len(self.mysql_all_rows))}条数据.")
         else:
             self.statusbar.showMessage("请先和数据库建立连接.")
 
@@ -126,13 +130,47 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
                 self.statusbar.showMessage("错误:无法关闭数据库...")
 
     def btn_up_released(self):
-        pass
+        if self.current_page > 1:
+            self.current_page -= 1
+        if self.current_page > self.pages_of_rows:
+            self.current_page = self.pages_of_rows
+            self.statusbar.showMessage("已经是最前一页.")
+            return
+        if self.current_page == self.pages_of_rows:
+            self.current_rows = self.mysql_all_rows[((self.current_page-1)*30):]
+        else:
+            self.current_rows = self.mysql_all_rows[((self.current_page-1)*30):(self.current_page*30)]
+        if self.mysql_cursor:
+            for j in range(0, min(len(self.current_rows), 30)):
+                for i in range(0, 8):
+                    item = self.tableWidget.item(j, i)
+                    item.setText(self.current_rows[j][i])
+            self.statusbar.showMessage("第{page}页数据装载完成.".format(page=str(self.current_page)))
+        else:
+            self.statusbar.showMessage("数据库连接出错咯😠.")
 
     def btn_next_released(self):
-        pass
+        if self.current_page < self.pages_of_rows:
+            self.current_page += 1
+        if self.current_page > self.pages_of_rows:
+            self.current_page = self.pages_of_rows
+            self.statusbar.showMessage("已经是最后一页.")
+            return
+        if self.current_page == self.pages_of_rows:
+            self.current_rows = self.mysql_all_rows[((self.current_page-1)*30):]
+        else:
+            self.current_rows = self.mysql_all_rows[((self.current_page-1)*30):(self.current_page*30)]
+        if self.mysql_cursor:
+            for j in range(0, min(len(self.current_rows), 30)):
+                for i in range(0, 8):
+                    item = self.tableWidget.item(j, i)
+                    item.setText(self.current_rows[j][i])
+            self.statusbar.showMessage("第{page}页数据装载完成.".format(page=str(self.current_page)))
+        else:
+            self.statusbar.showMessage("数据库连接出错咯😠.")
 
-    def btn_dot_released(self):
-        print("dot button released")
+    # def btn_dot_released(self):
+    #     print("dot button released")
 
     def btn_search_released(self):
         self.btn_clear_released()
