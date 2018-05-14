@@ -1,1 +1,13 @@
-# 这是一个简单的数据库应用程序
+# 这是一个简单的使用pyqt5编写的数据库应用程序
+# required lib:
+#               plotly
+#               pyqt5
+#               mysqlclient
+#               webbrowser
+#               re
+# required software:
+#               pycharm
+#               python3.6
+#               mysqlserver
+#               navicat
+# ヽ(￣ω￣(￣ω￣〃)ゝ

@@ -1,18 +1,14 @@
 # GUI LOGIC Parts.
-from PyQt5 import QtCore, QtGui, QtWidgets
-
+from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QMainWindow
 from db_gui import Ui_MainWindow
-# from PyQt5.QtCore import QCoreApplication
 import re
-# import os
 import webbrowser
 import MySQLdb as mysqlconn
 import plotly as plt
 import plotly.graph_objs as plt_go
 
 
-# MyMainWindow definition.
 class MyMainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MyMainWindow, self).__init__(parent)
@@ -34,9 +30,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
         self.current_rows = None
         self.pages_of_rows = 0
         self.current_page = 1
-    # slots functions.
-    # def btn_click_released(self):
-    # 	QtWidgets.QMessageBox.information(self.pushButton, "Demo", "Demo gui program")
 
     def gui_quit(self):
         # QCoreApplication.instance().quit()
@@ -175,9 +168,6 @@ class MyMainWindow(QMainWindow, Ui_MainWindow):
             self.statusbar.showMessage("第{page}页数据装载完成.=￣ω￣=.".format(page=str(self.current_page)))
         else:
             self.statusbar.showMessage("数据库连接出错咯😠.")
-
-    # def btn_dot_released(self):
-    #     print("dot button released")
 
     def btn_search_released(self):
         self.btn_clear_released()
